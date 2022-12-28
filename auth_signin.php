@@ -25,8 +25,8 @@ if ($_GET["username"] && $_GET["password"]) {
 
 function logOn() {
     $username = $_GET["username"];
-    // $password = md5($_GET["password"]);
-    $password = $_GET["password"];
+    $password = md5($_GET["password"]);
+    // $password = $_GET["password"];
 
     require("./db_info.php");
 

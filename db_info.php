@@ -2,7 +2,7 @@
 $db_host = 'localhost';
 $db_user = 'root';
 $db_password = '';
-$database ='termos_g3';
+$database ='mydb';
 
 mysqli_report(MYSQLI_REPORT_ALL);
 
