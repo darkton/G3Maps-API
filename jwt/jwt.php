@@ -53,17 +53,17 @@ class JWT
         }
 
         if (isset(json_decode($payload)->iss)) {
-            if (json_decode($headers)->iss != json_decode($payload)->iss) {
-                return false; // fails if issuers are not the same
-            }
+            // if (json_decode($headers)->iss != json_decode($payload)->iss) {
+            //     return false; // fails if issuers are not the same
+            // }
         } else {
             return false; // fails if issuer is not set 
         }
 
         if (isset(json_decode($payload)->aud)) {
-            if (json_decode($headers)->aud != json_decode($payload)->aud) {
-                return false; // fails if audiences are not the same
-            }
+            // if (json_decode($headers)->aud != json_decode($payload)->aud) {
+            //     return false; // fails if audiences are not the same
+            // }
         } else {
             return false; // fails if audience is not set
         }
