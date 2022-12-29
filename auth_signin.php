@@ -12,7 +12,7 @@ include("./jwt/jwt.php");
 
 $response = array();
 
-if ($_GET["username"] && $_GET["password"]) {
+if ($_POST["username"] && $_POST["password"]) {
     logOn();
 } else {
     http_response_code(400);
@@ -24,8 +24,8 @@ if ($_GET["username"] && $_GET["password"]) {
 }
 
 function logOn() {
-    $username = $_GET["username"];
-    $password = md5($_GET["password"]);
+    $username = $_POST["username"];
+    $password = md5($_POST["password"]);
     // $password = $_GET["password"];
 
     require("./db_info.php");
@@ -37,14 +37,16 @@ function logOn() {
     $user_uuid = "";
     
     while($row = mysqli_fetch_assoc($result)) {
-        $user_uuid = $row["uuid"];
+        $user_uuid = $row["user_id"];
     } 
 
     if($count == 1) {
         http_response_code(200);
 
         $payload = array(
-            'uuid'=> $user_uuid
+            'sub'=> $user_uuid,
+            'iss'=> "localhost",
+            'aud'=> "localhost"
         );
         
         $response[0] = array(
