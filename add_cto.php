@@ -4,7 +4,7 @@ error_reporting(1);
 mysqli_report (MYSQLI_REPORT_OFF);
 
 header('Access-Control-Allow-Origin: *');
-// header('Content-type: application/json');
+header('Content-type: application/json');
 
 define('__ROOT__', dirname(dirname(__FILE__)));
 include("./db_info.php");
@@ -52,10 +52,11 @@ function addCTO() {
 
         require("./db_info.php");
 
-        
-
-        $sql_add = "INSERT INTO `cto` (`cto_id`, `cto_number`, `olt_name`, `route_number`, `latitude`, `longitude`, `signal`, `image_url`, `user_user_id`, `user_first_name`, `user_last_name`, `timestamp`) VALUES (NULL, '$cto', '$olt', '$route, '$lat', '$long', '$signal', '$image_url', '$user_id', '$user_first_name', '$user_last_name', CURRENT_TIMESTAMP);";
-        $result_add = $mysqli -> query($sql_add);
+        $stmt = $mysqli->prepare("INSERT INTO `cto` (`cto_id`, `cto_number`, `olt_name`, `route_number`, `latitude`, `longitude`, `signal`, `image_url`, `user_user_id`, `user_first_name`, `user_last_name`, `timestamp`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);");
+        $stmt -> bind_param("isidddssss", $cto, $olt, $route, $lat, $long, $signal, $image_url, $user_id, $user_first_name, $user_last_name);
+        $stmt -> next_result();
+        $stmt -> execute();
+        $stmt -> close();
     } else {
         http_response_code(401);
         $response[0] = array(
