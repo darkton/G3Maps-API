@@ -5,6 +5,7 @@ mysqli_report (MYSQLI_REPORT_OFF);
 
 header('Access-Control-Allow-Origin: *');
 header('Content-type: application/json');
+header("Content-Type: text/html;charset=utf-8");
 
 define('__ROOT__', dirname(dirname(__FILE__)));
 include("./db_info.php");

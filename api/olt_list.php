@@ -1,10 +1,10 @@
 <?php
 session_start();
 error_reporting(1);
-mysqli_report (MYSQLI_REPORT_OFF);
+mysqli_report (MYSQLI_REPORT_ERROR);
 
 header('Access-Control-Allow-Origin: *');
-header('Content-type: application/json');
+// header('Content-type: application/json');
 
 define('__ROOT__', dirname(dirname(__FILE__)));
 include("./db_info.php");
@@ -35,8 +35,8 @@ if(getBearerToken()) {
 
 function getOLTs() {
     require("./db_info.php");
-
-    $sql = "SELECT * FROM `olt` WHERE  `name_olt` IS NOT NULL";
+  
+    $sql = "SELECT * FROM `olt` WHERE 1;";
     $result = $mysqli -> query($sql);
 
     $ind_olt = array();
