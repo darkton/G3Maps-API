@@ -1,7 +1,7 @@
 <?php
 $db_host = 'localhost';
-$db_user = 'harkinco_db';
-$db_password = 'md32299046aB';
+$db_user = 'root';
+$db_password = '';
 $database ='harkinco_db';
 
 $mysqli = "";
