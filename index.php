@@ -26,6 +26,38 @@ if (!isset($_COOKIE['__token'])) {
 </head>
 
 <body id="body-pd">
+    <div class="toast-container top-0 start-50 translate-middle-x" style="margin-bottom: 40px;">
+        <div id="liveToast" class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+            <div class="d-flex">
+                    <div id="toastMessage" class="toast-body">
+                        ...
+                    </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    <div id="addModal" class="modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Adicionar POP</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="needs-validation" id="addPOPForm" enctype="multipart/form-data" action="#" method="post" novalidate>
+                    <input id="popNameInput" name="pop_name" type="text" class="form-control" placeholder="Nome do POP" required>
+                    <div class="invalid-feedback">
+                        Por favor, digite o nome do POP.
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                <button id="btnAddPOP" type="submit" class="btn btn-primary">Adicionar</button>
+            </div>
+            </div>
+        </div>
+    </div>
     <header class="header" id="header" >
         <div class="header_toggle"> <i class='bi bi-list' id="header-toggle"></i> </div>
     </header>
@@ -57,13 +89,12 @@ if (!isset($_COOKIE['__token'])) {
     </div>
     <!--Container Main start-->
     <div class="height-100" style="padding-top: 32px;">
+        
         <h4>Gerenciar POP</h4>
-        <button class="btn btn-primary g3-btn-add" type="submit"><i class='bi bi-plus' style="margin-right: 8px;"></i>Adicionar</button>
+        <button class="btn btn-primary g3-btn-add" data-bs-toggle="modal" data-bs-target="#addModal"><i class='bi bi-plus' style="margin-right: 8px;"></i>Adicionar</button>
         <div class="card" style="width: 100%; margin-top: 8px;">
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><p class="g3-minus-margin"><b>POP PARQUE PIAUÍ</b><br><small>AVENIDA MARECHAL JUAREZ TÁVORA, QUADRA3 28, PARQUE PIAUÍ, TERESINA/PI | CEP: 64025520</small></p></p></li>
-                <li class="list-group-item">A second item</li>
-                <li class="list-group-item">A third item</li>
+            <ul id="list" class="list-group list-group-flush">
+
             </ul>
         </div>
     </div>
@@ -74,9 +105,119 @@ if (!isset($_COOKIE['__token'])) {
         integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
         crossorigin="anonymous"></script>
     <script>
+        const list = document.getElementById("list");
+        var addPOPButton = document.getElementById('btnAddPOP');
+
+        addPOPButton.onclick = async (e) => {
+            e.preventDefault();
+
+            const url = "./api/add_pop.php";
+
+            try {
+                const form = document.getElementById("addPOPForm");
+                const formData = new FormData(form);
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' +  getCookie("__token")
+                    },
+                    body: formData
+                }).then(function (response) { 
+                    form.reset();
+                    if(!response.ok) {
+                        displayToast("Um erro inesperado aconteceu. Tente novamente mais tarde.");
+                    } else {
+                        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('addModal'));  
+                        modal.hide();
+
+                        location.reload();
+                    }
+
+                    return response.text(); 
+                });
+
+                console.log(response);
+
+                const obj = JSON.parse(response);
+                for(i in obj){
+                    console.log(response);
+                }
+            
+            } catch (error) {
+                displayToast("Erro no servidor. Contate o administrador.");
+            }
+        }
+
         function deleteUserCookie() {
             document.cookie = '__token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
             document.location.reload();
+        }
+
+        
+
+        window.addEventListener("load", () => searchPOP(), false);
+
+        async function searchPOP() {
+            const url = "./api/pop_list.php";
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' +  getCookie("__token")
+                    }
+                }).then(function (response) { return response.text(); });
+
+                let resStatusCode;
+                let resToken;
+
+                console.log(response);
+
+                const obj = JSON.parse(response);
+                for(i in obj){
+                    
+                    var z = document.createElement('li'); // is a node
+                    z.innerHTML = '<div style="display: flex;"><div style="display: flex; width: 100%; align-items: center;"><p class="g3-minus-margin"><b>' + obj[i]["pop_name"] + '</b></p></div><button class="btn btn-light"><i class="bi bi-pencil-square"></i></button><button style="margin-left: 8px;" class="btn btn-danger"><i class="bi bi-trash3-fill"></i></button></div>';
+                    z.classList.add("list-group-item");
+
+                    // resStatusCode = obj[i]["status_code"];
+                    // resToken = obj[i]["token"];
+
+                    list.appendChild(z);
+                }
+            
+                if(resStatusCode == 200) {
+                } else {
+                    // displayToast("Erro no servidor. Contate o administrador.");
+                }
+            } catch (error) {
+                console.log("Error: " + error);
+                // displayToast("Erro no servidor. Contate o administrador.");
+            }
+        }
+
+        function getCookie(c_name) {
+            if (document.cookie.length > 0) {
+                c_start = document.cookie.indexOf(c_name + "=");
+                if (c_start != -1) {
+                    c_start = c_start + c_name.length + 1;
+                    c_end = document.cookie.indexOf(";", c_start);
+                    if (c_end == -1) {
+                        c_end = document.cookie.length;
+                    }
+                    return unescape(document.cookie.substring(c_start, c_end));
+                }
+            }
+            return "";
+        }
+
+        const toastLive = document.getElementById('liveToast')
+
+        function displayToast(text) {
+            document.getElementById('toastMessage').innerHTML = text;
+            const toast = new bootstrap.Toast(toastLive)
+            toast.show()
         }
     </script>
 </body>
