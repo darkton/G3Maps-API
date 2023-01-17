@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         if (toggle && nav && bodypd && headerpd) {
             toggle.addEventListener('click', () => {
                 // show navbar
-                nav.classList.toggle('show')
+                nav.classList.toggle('show-menu')
                 // add padding to body
                 bodypd.classList.toggle('body-pd')
                 // add padding to header
