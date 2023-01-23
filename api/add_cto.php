@@ -32,7 +32,7 @@ if(getBearerToken()) {
 }
 
 function addCTO() {
-    $params_needed = ["cto", "olt", "route",
+    $params_needed = ["cto", "olt", "card", "pon",
                 "lat", "long", "signal", "image_url"];
     $given_params = array_keys($_POST);
     $missing_params = array_diff($params_needed, $given_params);
@@ -40,20 +40,18 @@ function addCTO() {
     if(empty($missing_params)) {
         $cto = $_POST["cto"];
         $olt = $_POST["olt"];
-        $route = $_POST["route"];
+        $card = $_POST["card"];
+        $pon = $_POST["pon"];
         $lat = $_POST["lat"];
         $long = $_POST["long"];
         $signal = $_POST["signal"];
         $image_url = "...";
         $user_id = "...";
-
-        $user_first_name = "NA";
-        $user_last_name = "NA";
-
+         
         require("./db_info.php");
 
-        $stmt = $mysqli->prepare("INSERT INTO `cto` (`cto_id`, `cto_number`, `olt_name`, `route_number`, `latitude`, `longitude`, `signal`, `image_url`, `user_user_id`, `user_first_name`, `user_last_name`, `timestamp`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);");
-        $stmt -> bind_param("isidddssss", $cto, $olt, $route, $lat, $long, $signal, $image_url, $user_id, $user_first_name, $user_last_name);
+        $stmt = $mysqli->prepare("INSERT INTO `cto` (`cto_id`, `cto_number`, `olt_name`, `card`, `pon`, `latitude`, `longitude`, `signal`, `image_url`, `user_user_id`, `timestamp`) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);");
+        $stmt -> bind_param("isiidddss", $cto, $olt, $card, $pon, $lat, $long, $signal, $image_url, $user_id);
         $stmt -> next_result();
         $stmt -> execute();
         $stmt -> close();
