@@ -36,7 +36,7 @@ if(getBearerToken()) {
 function getOLTs() {
     require("./db_info.php");
   
-    $sql = "SELECT * FROM `olt` WHERE 1;";
+    $sql = "SELECT * FROM `olt` WHERE 1 ORDER BY `name_pop` ASC;";
     $result = $mysqli -> query($sql);
 
     $ind_olt = array();
