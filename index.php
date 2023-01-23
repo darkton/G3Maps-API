@@ -73,16 +73,10 @@ if (!isset($_COOKIE['__token'])) {
                         <i class='bi bi-building-fill nav_icon'></i>
                         <span class="nav_name">POP</span>
                     </a> 
-                    <a href="#" class="nav_link"> 
+                    <a href="/olt.php" class="nav_link"> 
                         <i class='bi bi-hdd-rack-fill nav_icon'></i> 
                         <span class="nav_name">OLT</span> 
-                    </a> 
-                    <a href="#" class="nav_link"> 
-                        <i class='bi bi-diagram-3-fill nav_icon'></i> 
-                        <span class="nav_name">Rotas</span> 
-                    </a> 
-            
-                    
+                    </a>   
             </div> <a onclick="deleteUserCookie()" href="#" class="nav_link"> <i class='bi bi-box-arrow-right nav_icon'></i> <span
                     class="nav_name">Sair</span> </a>
         </nav>
@@ -178,7 +172,7 @@ if (!isset($_COOKIE['__token'])) {
                 for(i in obj){
                     
                     var z = document.createElement('li'); // is a node
-                    z.innerHTML = '<div style="display: flex;"><div style="display: flex; width: 100%; align-items: center;"><p class="g3-minus-margin"><b>' + obj[i]["pop_name"] + '</b></p></div><button class="btn btn-light"><i class="bi bi-pencil-square"></i></button><button style="margin-left: 8px;" class="btn btn-danger"><i class="bi bi-trash3-fill"></i></button></div>';
+                    z.innerHTML = '<div style="display: flex;"><div style="display: flex; width: 100%; align-items: center;"><p class="g3-minus-margin"><b>' + obj[i]["pop_name"] + '</b></p></div><button class="btn btn-light"><i class="bi bi-pencil-square"></i></button><button onclick="deletePOP(this);" style="margin-left: 8px;" class="btn btn-danger" data-popid="'+ obj[i]["id_pop"] +'"><i class="bi bi-trash3-fill"></i></button></div>';
                     z.classList.add("list-group-item");
 
                     // resStatusCode = obj[i]["status_code"];
@@ -218,6 +212,14 @@ if (!isset($_COOKIE['__token'])) {
             document.getElementById('toastMessage').innerHTML = text;
             const toast = new bootstrap.Toast(toastLive)
             toast.show()
+        }
+
+        function deletePOP(pop) {
+            var popId = pop.getAttribute("data-popid");
+
+            if (confirm('Você deseja mesmo excluir o POP? Esta ação não poderá ser revertida.')) {
+                
+            }
         }
     </script>
 </body>
