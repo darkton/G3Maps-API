@@ -80,6 +80,10 @@ if (!isset($_COOKIE['__token'])) {
                         <i class='bi bi-hdd-rack-fill nav_icon'></i> 
                         <span class="nav_name">OLT</span> 
                     </a> 
+                    <a href="/routes.php" class="nav_link"> 
+                        <i class='bi bi-cursor-fill'></i> 
+                        <span class="nav_name">Rotas</span> 
+                    </a>  
             </div> 
             <a onclick="deleteUserCookie()" href="#" class="nav_link"> <i class='bi bi-box-arrow-right nav_icon'></i> <span
                     class="nav_name">Sair</span> </a>
