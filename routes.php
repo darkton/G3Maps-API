@@ -45,13 +45,12 @@ if (!isset($_COOKIE['__token'])) {
             </div>
             <div class="modal-body">
                 <form class="needs-validation" id="addPOPForm" enctype="multipart/form-data" action="#" method="post" novalidate>
-                    <select id="popList" class="form-select" aria-label="POP">
-                        <option selected>Selecionar POP</option>
+                    <select id="popList" class="form-select" aria-label="OLT">
+                        <option selected>Selecionar OLT</option>
                     </select>
-                    <input style="margin-top: 8px;" id="popNameInput" name="olt_name" type="text" class="form-control" placeholder="Nome da OLT" required>
-                    <div class="invalid-feedback">
-                        Por favor, digite o nome da OLT.
-                    </div>
+                    <input style="margin-top: 8px;"  type="text" class="form-control" name="number" placeholder="Número da CTO" required>
+                    <input style="margin-top: 8px;"  type="text" class="form-control" name="card" placeholder="Card" required>
+                    <input style="margin-top: 8px;"  type="text" class="form-control" name="pon" placeholder="PON" required>
                 </form>
             </div>
             <div class="modal-footer">
@@ -92,8 +91,13 @@ if (!isset($_COOKIE['__token'])) {
     <!--Container Main start-->
     <div class="height-100" style="padding-top: 32px;">
         
-        <h4>Gerenciar OLT</h4>
-        <button class="btn btn-primary g3-btn-add" onclick="searchPOPList()" data-bs-toggle="modal" data-bs-target="#addModal"><i class='bi bi-plus' style="margin-right: 8px;"></i>Adicionar</button>
+        <h4>Gerenciar Rotas</h4>
+        <button class="btn btn-primary g3-btn-add" onclick="searchPOPList()"  data-bs-toggle="modal" data-bs-target="#addModal"><i class='bi bi-plus' style="margin-right: 8px;"></i>Adicionar</button>
+        <select id="oltList" class="form-select" style="margin-top: 16px;" aria-label="POP">
+            <option selected>Selecionar OLT</option>
+        </select>
+        <button class="btn btn-primary" style="width: 100%; margin-top: 4px;" onclick="searchOLT()"><i class='bi bi-search' style="margin-right: 8px;"></i>Buscar</button>
+        <br>
         <div class="card" style="width: 100%; margin-top: 8px;">
             <ul id="list" class="list-group list-group-flush">
 
@@ -109,6 +113,7 @@ if (!isset($_COOKIE['__token'])) {
     <script>
         const list = document.getElementById("list");
         const popList = document.getElementById("popList");
+        const oltList = document.getElementById("oltList");
         var addPOPButton = document.getElementById('btnAddPOP');
 
         addPOPButton.onclick = async (e) => {
@@ -122,7 +127,7 @@ if (!isset($_COOKIE['__token'])) {
             try {
                 const form = document.getElementById("addPOPForm");
                 const formData = new FormData(form);
-                formData.append("pop_name", textPop);
+                formData.append("olt", textPop);
 
                 const response = await fetch(url, {
                     method: 'POST',
@@ -161,13 +166,18 @@ if (!isset($_COOKIE['__token'])) {
             document.location.reload();
         }
 
-        window.addEventListener("load", () => searchOLT(), false);
+        window.addEventListener("load", () => searchOLTList(), false);
 
         async function searchOLT() {
+            document.getElementById("list").innerHTML = "";
+
+            var value = oltList.value;
+            var textOlt = oltList.options[oltList.selectedIndex].text;
+
             const url = "./api/route_list.php";
 
             const formData = new FormData();
-            formData.append("olt", "CODÓ");
+            formData.append("olt", textOlt);
 
             try {
                 const response = await fetch(url, {
@@ -233,10 +243,44 @@ if (!isset($_COOKIE['__token'])) {
             }
         }
 
+        async function searchOLTList() {
+            const url = "./api/olt_list.php";
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' +  getCookie("__token")
+                    }
+                }).then(function (response) { return response.text(); });
+
+                let resStatusCode;
+                let resToken;
+
+                console.log(response);
+
+                const obj = JSON.parse(response);
+                for(i in obj){
+                    
+                    var z = document.createElement('option'); // is a node
+                    z.innerHTML = obj[i]["olt_name"];
+                    
+                    oltList.appendChild(z);
+                }
+            
+                if(resStatusCode == 200) {
+                } else {
+                    // displayToast("Erro no servidor. Contate o administrador.");
+                }
+            } catch (error) {
+                console.log("Error: " + error);
+                // displayToast("Erro no servidor. Contate o administrador.");
+            }
+        }
+
         async function searchPOPList() {
             document.getElementById("popList").innerHTML = "";
 
-            const url = "./api/pop_list.php";
+            const url = "./api/olt_list.php";
 
             try {
                 const response = await fetch(url, {
@@ -255,7 +299,7 @@ if (!isset($_COOKIE['__token'])) {
                 for(i in obj){
                     
                     var z = document.createElement('option'); // is a node
-                    z.innerHTML = obj[i]["pop_name"];
+                    z.innerHTML = obj[i]["olt_name"];
                     
                     popList.appendChild(z);
                 }
