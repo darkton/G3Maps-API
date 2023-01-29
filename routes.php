@@ -40,7 +40,7 @@ if (!isset($_COOKIE['__token'])) {
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Adicionar OLT</h5>
+                <h5 class="modal-title">Adicionar rota</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -48,7 +48,7 @@ if (!isset($_COOKIE['__token'])) {
                     <select id="popList" class="form-select" aria-label="OLT">
                         <option selected>Selecionar OLT</option>
                     </select>
-                    <input style="margin-top: 8px;"  type="text" class="form-control" name="number" placeholder="Número da CTO" required>
+                    <input style="margin-top: 8px;"  type="text" class="form-control" name="number" placeholder="Número da rota" required>
                     <input style="margin-top: 8px;"  type="text" class="form-control" name="card" placeholder="Card" required>
                     <input style="margin-top: 8px;"  type="text" class="form-control" name="pon" placeholder="PON" required>
                 </form>
@@ -122,7 +122,7 @@ if (!isset($_COOKIE['__token'])) {
             var value = popList.value;
             var textPop = popList.options[popList.selectedIndex].text;
 
-            const url = "./api/add_olt.php";
+            const url = "./api/add_route.php";
 
             try {
                 const form = document.getElementById("addPOPForm");
@@ -194,6 +194,7 @@ if (!isset($_COOKIE['__token'])) {
                 console.log(response);
 
                 const obj = JSON.parse(response);
+
                 for(i in obj){
                     var z = document.createElement('li'); // is a node
                     z.innerHTML = '<div style="display: flex;"><div style="display: flex; width: 100%; align-items: center;"><p class="g3-minus-margin"><b>ROTA ' + obj[i]["route_number"] + '</b><br><small>CARD ' + obj[i]["slot_number"] + ' / PON ' + obj[i]["port_number"] + '</small></p></div><button class="btn btn-light"><i class="bi bi-pencil-square"></i></button><button onclick="deletePOP(this);" style="margin-left: 8px;" class="btn btn-danger" data-popid="'+ obj[i]["id_olt"] +'"><i class="bi bi-trash3-fill"></i></button></div>';
@@ -203,12 +204,13 @@ if (!isset($_COOKIE['__token'])) {
                 }
             
                 if(resStatusCode == 200) {
+                    
                 } else {
                     // displayToast("Erro no servidor. Contate o administrador.");
                 }
             } catch (error) {
                 console.log("Error: " + error);
-                // displayToast("Erro no servidor. Contate o administrador.");
+                displayToast("Erro no servidor. Contate o administrador.");
             }
         }
 
