@@ -41,7 +41,7 @@ function uploadImg() {
         if($ext == "png" OR $ext == "jpg" OR $ext == "jpeg") {
 
             move_uploaded_file($file_tmp, "./img/$new_filename");
-            $image_url = 'http://'.$_SERVER['SERVER_NAME']."/img/".$new_filename;
+            $image_url = 'http://'.$_SERVER['SERVER_NAME']."/api/img/".$new_filename;
 
             http_response_code(201);
             $response[0] = array(
