@@ -45,7 +45,7 @@ function addRoute() {
         require("./db_info.php");
 
         $stmt = $mysqli->prepare("INSERT INTO `route` (`route_id`, `route_number`, `port_number`, `slot_number`, `olt_name`) VALUES (NULL, ?, ?, ?, ?);");
-        $stmt -> bind_param("iiis", $olt, $number, $card, $pon);
+        $stmt -> bind_param("iiis", $number, $pon, $card, $olt);
         $stmt -> next_result();
         $stmt -> execute();
         $stmt -> close();
